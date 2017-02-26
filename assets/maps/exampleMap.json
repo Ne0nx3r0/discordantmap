@@ -16,13 +16,65 @@
          "height":10,
          "name":"triggers",
          "opacity":0.00999999977648258,
+         "properties":
+            {
+             "encounterChance":0.5
+            },
+         "propertytypes":
+            {
+             "encounterChance":"float"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":10,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":10,
+         "name":"Object Layer 1",
+         "objects":[
+                {
+                 "height":0,
+                 "id":1,
+                 "name":"",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":77,
+                         "y":79
+                        }, 
+                        {
+                         "x":13,
+                         "y":106
+                        }, 
+                        {
+                         "x":-54,
+                         "y":-10
+                        }, 
+                        {
+                         "x":0,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":122,
+                 "y":62
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":1,
+ "nextobjectid":4,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
@@ -35,6 +87,14 @@
          "imagewidth":96,
          "margin":0,
          "name":"triggers",
+         "properties":
+            {
+             "encounterChance":0.4
+            },
+         "propertytypes":
+            {
+             "encounterChance":"float"
+            },
          "spacing":0,
          "tilecount":9,
          "tileheight":32,

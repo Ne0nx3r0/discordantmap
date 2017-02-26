@@ -1,5 +1,6 @@
+const mapToProcess = 'WesternGate';
 const Jimp = require('jimp');
-const mapInfo = require('../assets/maps/exampleMap.json');
+const mapInfo = require('../assets/maps/' + mapToProcess + '.json');
 const mapHeight = mapInfo.height;
 const mapWidth = mapInfo.width;
 const tileheight = mapInfo.tileheight;
@@ -13,7 +14,7 @@ const assetsToLoad = [
     './assets/hud_left.png',
     './assets/hud_right.png',
     './assets/hud_party.png',
-    './assets/maps/exampleMap.png',
+    './assets/maps/' + mapToProcess + '.png',
 ];
 const assets = {};
 for (var i = 0; i < assetsToLoad.length; i++) {
@@ -35,7 +36,7 @@ function generateMapFiles() {
             if (!isWalkable(x, y)) {
                 continue;
             }
-            const image = assets['exampleMap'].clone();
+            const image = assets[mapToProcess].clone();
             let overlayx = x;
             let overlayy = y;
             let cropx = x - (sliceSize - 1) / 2;

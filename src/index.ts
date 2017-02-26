@@ -1,5 +1,7 @@
+const mapToProcess = 'WesternGate';
+
 const Jimp = require('jimp');
-const mapInfo = require('../assets/maps/exampleMap.json');
+const mapInfo = require('../assets/maps/'+mapToProcess+'.json');
 
 const mapHeight = mapInfo.height;
 const mapWidth = mapInfo.width;
@@ -16,7 +18,7 @@ const assetsToLoad = [
     './assets/hud_left.png',
     './assets/hud_right.png',
     './assets/hud_party.png',
-    './assets/maps/exampleMap.png',
+    './assets/maps/'+mapToProcess+'.png',
 ];
 
 const assets = {};
@@ -45,7 +47,7 @@ function generateMapFiles(){
                 continue;
             }
 
-            const image = assets['exampleMap'].clone();
+            const image = assets[mapToProcess].clone();
 
             let overlayx = x;
             let overlayy = y;

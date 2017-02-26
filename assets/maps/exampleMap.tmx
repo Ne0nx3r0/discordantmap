@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="32" tileheight="32" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="32" tileheight="32" nextobjectid="5">
  <tileset firstgid="1" name="triggers" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+  <properties>
+   <property name="encounterChance" type="float" value="0.4"/>
+  </properties>
   <image source="../tileset.png" width="96" height="96"/>
  </tileset>
  <tileset firstgid="10" name="tmw_desert_spacing" tilewidth="32" tileheight="32" spacing="1" margin="1" tilecount="48" columns="8">
@@ -21,6 +24,9 @@
 </data>
  </layer>
  <layer name="triggers" width="10" height="10" opacity="0.01">
+  <properties>
+   <property name="encounterChance" type="float" value="0.5"/>
+  </properties>
   <data encoding="csv">
 1,1,1,1,1,1,1,1,1,1,
 1,0,0,0,0,0,0,0,0,1,
