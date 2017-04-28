@@ -8,8 +8,23 @@ const mapWidth = mapInfo.width;
 const tileheight = mapInfo.tileheight;
 const tilewidth = mapInfo.tilewidth;
 
+let triggersLayer;
+
+for(var i=0;i<mapInfo.layers.length;i++){
+    const layer = mapInfo.layers[i];
+
+    if(layer.name == 'triggers'){
+        triggersLayer = i;
+        break; 
+    }
+}
+
+if(triggersLayer === undefined){
+    throw 'No triggers layer defined in map '+mapToProcess;
+}
+
 function isWalkable(x,y){
-    return mapInfo.layers[1].data[(y-1)*mapWidth+x-1] == 0;
+    return mapInfo.layers[triggersLayer].data[(y-1)*mapWidth+x-1] != 1;
 }
 
 const assetsToLoad = [
