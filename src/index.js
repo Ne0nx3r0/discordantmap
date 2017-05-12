@@ -88,6 +88,7 @@ function generateMapFiles() {
             if (isWalkable(x + 1, y))
                 image.composite(assets['hud_right'], compositeX, compositeY);
             image.write('./exports/' + x + '-' + y + '.png');
+            image;
         }
     }
 }
