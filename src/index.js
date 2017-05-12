@@ -1,4 +1,4 @@
-const mapToProcess = 'WesternGate';
+const mapToProcess = 'WesternGate2';
 const Jimp = require('jimp');
 const mapInfo = require('../assets/maps/' + mapToProcess + '.json');
 const mapHeight = mapInfo.height;
@@ -8,13 +8,13 @@ const tilewidth = mapInfo.tilewidth;
 let triggersLayer;
 for (var i = 0; i < mapInfo.layers.length; i++) {
     const layer = mapInfo.layers[i];
-    if (layer.name == 'triggers') {
+    if (layer.name == 'walls') {
         triggersLayer = i;
         break;
     }
 }
 if (triggersLayer === undefined) {
-    throw 'No triggers layer defined in map ' + mapToProcess;
+    throw 'No walls layer defined in map ' + mapToProcess;
 }
 function isWalkable(x, y) {
     return mapInfo.layers[triggersLayer].data[(y - 1) * mapWidth + x - 1] != 1;
