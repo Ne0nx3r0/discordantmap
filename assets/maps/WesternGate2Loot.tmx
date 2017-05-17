@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="7" height="6" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" name="discordantTriggers" tilewidth="32" tileheight="32" tilecount="900" columns="30">
+  <image source="../../tilesets/discordantTriggers.png" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="901" name="Inq XP WM - World Map" tilewidth="32" tileheight="32" tilecount="4112" columns="8">
+  <image source="../../tilesets/Inq XP WM - World Map.png" width="256" height="16448"/>
+ </tileset>
+ <tileset firstgid="5013" name="indrahWilderness" tilewidth="32" tileheight="32" tilecount="220" columns="10">
+  <image source="../../tilesets/indrahWilderness.png" width="320" height="704"/>
+ </tileset>
+ <layer name="BG" width="7" height="6">
+  <data encoding="csv">
+918,918,918,918,918,918,918,
+918,918,918,918,918,918,918,
+918,918,918,918,918,918,918,
+918,918,918,918,918,918,918,
+918,918,918,918,918,918,918,
+918,918,918,918,918,918,918
+</data>
+ </layer>
+ <layer name="FG" width="7" height="6">
+  <data encoding="csv">
+1353,1387,1356,0,1355,1387,1352,
+1380,0,0,0,0,0,1378,
+1380,0,32,62,32,0,1378,
+1380,0,0,0,0,0,1378,
+1380,0,0,0,0,0,1378,
+1345,1371,1371,1371,1371,1371,1344
+</data>
+ </layer>
+ <layer name="walls" width="7" height="6" opacity="0">
+  <data encoding="csv">
+1,1,1,1,1,1,1,
+1,0,0,0,0,0,1,
+1,0,0,0,0,0,1,
+1,0,0,0,0,0,1,
+1,0,0,0,0,0,1,
+1,1,1,1,1,1,1
+</data>
+ </layer>
+</map>
