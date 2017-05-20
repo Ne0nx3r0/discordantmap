@@ -1,0 +1,2 @@
+sharp install instructions:
+http://sharp.dimens.io/en/stable/install/#installation

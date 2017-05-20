@@ -1,9 +1,16 @@
-const Jimp = require('jimp');
-const mapsToProcess = [
-    'WesternGate2',
-    'WesternGate2Loot',
-];
-mapsToProcess.forEach(function (mapName) {
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+const Sharp = require('sharp');
+const SLICE_SIZE = 9;
+const fs = require('fs');
+const args = process.argv.slice(2);
+args.forEach(function (mapName) {
     processMap(mapName);
 });
 function processMap(mapToProcess) {
@@ -39,77 +46,91 @@ function processMap(mapToProcess) {
     for (var i = 0; i < assetsToLoad.length; i++) {
         const asset = assetsToLoad[i];
         const assetName = asset.substr(asset.lastIndexOf('/') + 1, asset.lastIndexOf('.') - asset.lastIndexOf('/') - 1);
-        Jimp.read(asset, function (err, lenna) {
-            if (err)
-                throw err;
-            assets[assetName] = lenna;
-            if (Object.keys(assets).length == assetsToLoad.length) {
-                generateMapFiles();
+        assets[assetName] = fs.readFileSync(asset);
+        if (Object.keys(assets).length == assetsToLoad.length) {
+            generateMapSlices();
+        }
+    }
+    function generateMapSlices() {
+        return __awaiter(this, void 0, void 0, function* () {
+            var dir = './exports/';
+            var subdir = './exports/' + mapToProcess + '/';
+            var subdir2 = './exports/' + mapToProcess + '/slices/';
+            if (!fs.existsSync(dir))
+                fs.mkdirSync(dir);
+            if (!fs.existsSync(subdir))
+                fs.mkdirSync(subdir);
+            if (!fs.existsSync(subdir2))
+                fs.mkdirSync(subdir2);
+            fs.createReadStream('./assets/maps/' + mapToProcess + '.json').pipe(fs.createWriteStream(subdir + mapToProcess + 'Layout.json'));
+            const sharpImage = Sharp(assets[mapToProcess]);
+            for (var x = 1; x <= mapWidth; x++) {
+                for (var y = 1; y <= mapHeight; y++) {
+                    if (!isWalkable(x, y)) {
+                        continue;
+                    }
+                    let overlayx = x;
+                    let overlayy = y;
+                    let cropx = x - (SLICE_SIZE - 1) / 2;
+                    let cropy = y - (SLICE_SIZE - 1) / 2;
+                    let cropw = x + (SLICE_SIZE - 1) / 2;
+                    let croph = y + (SLICE_SIZE - 1) / 2;
+                    while (cropx < 1) {
+                        cropx++;
+                        cropw++;
+                        overlayx++;
+                    }
+                    while (cropy < 1) {
+                        cropy++;
+                        croph++;
+                        overlayy++;
+                    }
+                    while (cropw > mapWidth) {
+                        cropx--;
+                        cropw--;
+                        overlayx--;
+                    }
+                    while (croph > mapHeight) {
+                        cropy--;
+                        croph--;
+                        overlayy--;
+                    }
+                    const compositeX = (x - cropx - 1) * tilewidth;
+                    const compositeY = (y - cropy - 1) * tileheight;
+                    let image = sharpImage.clone();
+                    const overlayOptions = {
+                        top: compositeY,
+                        left: compositeX,
+                    };
+                    image = yield image.extract({
+                        left: (cropx - 1) * tilewidth,
+                        top: (cropy - 1) * tileheight,
+                        width: tilewidth * SLICE_SIZE,
+                        height: tileheight * SLICE_SIZE
+                    })
+                        .raw().toBuffer();
+                    const rawOptions = {
+                        raw: {
+                            width: tilewidth * SLICE_SIZE,
+                            height: tileheight * SLICE_SIZE,
+                            channels: 4,
+                        }
+                    };
+                    image = yield Sharp(image, rawOptions)
+                        .overlayWith(assets['hud_party'], overlayOptions).raw().toBuffer();
+                    //append directions party can walk from here
+                    if (isWalkable(x, y - 1))
+                        image = yield Sharp(image, rawOptions).overlayWith(assets['hud_up'], overlayOptions).raw().toBuffer();
+                    if (isWalkable(x - 1, y))
+                        image = yield Sharp(image, rawOptions).overlayWith(assets['hud_left'], overlayOptions).raw().toBuffer();
+                    if (isWalkable(x, y + 1))
+                        image = yield Sharp(image, rawOptions).overlayWith(assets['hud_down'], overlayOptions).raw().toBuffer();
+                    if (isWalkable(x + 1, y))
+                        image = yield Sharp(image, rawOptions).overlayWith(assets['hud_right'], overlayOptions).raw().toBuffer();
+                    Sharp(image, rawOptions).toFile(subdir2 + x + '-' + y + '.png');
+                }
             }
         });
-    }
-    const sliceSize = 9;
-    function generateMapFiles() {
-        //copy the json
-        var fs = require('fs');
-        var dir = './exports/';
-        var subdir = './exports/' + mapToProcess + '/';
-        var subdir2 = './exports/' + mapToProcess + '/slices/';
-        if (!fs.existsSync(dir))
-            fs.mkdirSync(dir);
-        if (!fs.existsSync(subdir))
-            fs.mkdirSync(subdir);
-        if (!fs.existsSync(subdir2))
-            fs.mkdirSync(subdir2);
-        fs.createReadStream('./assets/maps/' + mapToProcess + '.json').pipe(fs.createWriteStream(subdir + mapToProcess + 'Layout.json'));
-        for (var x = 1; x <= mapWidth; x++) {
-            for (var y = 1; y <= mapHeight; y++) {
-                if (!isWalkable(x, y)) {
-                    continue;
-                }
-                const image = assets[mapToProcess].clone();
-                let overlayx = x;
-                let overlayy = y;
-                let cropx = x - (sliceSize - 1) / 2;
-                let cropy = y - (sliceSize - 1) / 2;
-                let cropw = x + (sliceSize - 1) / 2;
-                let croph = y + (sliceSize - 1) / 2;
-                while (cropx < 1) {
-                    cropx++;
-                    cropw++;
-                    overlayx++;
-                }
-                while (cropy < 1) {
-                    cropy++;
-                    croph++;
-                    overlayy++;
-                }
-                while (cropw > mapWidth) {
-                    cropx--;
-                    cropw--;
-                    overlayx--;
-                }
-                while (croph > mapHeight) {
-                    cropy--;
-                    croph--;
-                    overlayy--;
-                }
-                const compositeX = (x - cropx - 1) * tilewidth;
-                const compositeY = (y - cropy - 1) * tileheight;
-                image.crop((cropx - 1) * tilewidth, (cropy - 1) * tileheight, tilewidth * sliceSize, tileheight * sliceSize)
-                    .composite(assets['hud_party'], compositeX, compositeY);
-                //append directions party can walk from here
-                if (isWalkable(x, y - 1))
-                    image.composite(assets['hud_up'], compositeX, compositeY);
-                if (isWalkable(x - 1, y))
-                    image.composite(assets['hud_left'], compositeX, compositeY);
-                if (isWalkable(x, y + 1))
-                    image.composite(assets['hud_down'], compositeX, compositeY);
-                if (isWalkable(x + 1, y))
-                    image.composite(assets['hud_right'], compositeX, compositeY);
-                image.write(subdir2 + x + '-' + y + '.png');
-            }
-        }
     }
 }
 //# sourceMappingURL=index.js.map

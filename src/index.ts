@@ -1,11 +1,10 @@
-const Jimp = require('jimp');
+const Sharp = require('sharp');
+const SLICE_SIZE = 9;
+const fs = require('fs');
 
-const mapsToProcess = [
-    'WesternGate2',
-    'WesternGate2Loot',
-];
+const args = process.argv.slice(2);
 
-mapsToProcess.forEach(function(mapName){
+args.forEach(function(mapName){
     processMap(mapName);
 });
 
@@ -52,22 +51,14 @@ function processMap(mapToProcess:string){
         const asset = assetsToLoad[i];
         const assetName = asset.substr(asset.lastIndexOf('/')+1,asset.lastIndexOf('.')-asset.lastIndexOf('/')-1);
 
-        Jimp.read(asset,function(err,lenna){
-            if(err) throw err;
+        assets[assetName] = fs.readFileSync(asset);
 
-            assets[assetName] = lenna;
-
-            if(Object.keys(assets).length == assetsToLoad.length){
-                generateMapFiles();
-            }
-        });
+        if(Object.keys(assets).length == assetsToLoad.length){
+            generateMapSlices();
+        }
     }
 
-    const sliceSize = 9;
-
-    function generateMapFiles(){
-        //copy the json
-        var fs = require('fs');
+    async function generateMapSlices(){
         var dir = './exports/';
         var subdir = './exports/'+mapToProcess+'/';
         var subdir2 = './exports/'+mapToProcess+'/slices/';
@@ -78,22 +69,22 @@ function processMap(mapToProcess:string){
 
        fs.createReadStream('./assets/maps/'+mapToProcess+'.json').pipe(fs.createWriteStream(subdir+mapToProcess+'Layout.json'));
 
+       const sharpImage = Sharp(assets[mapToProcess]);
+
         for(var x=1;x<=mapWidth;x++){
             for(var y=1;y<=mapHeight;y++){
                 if(!isWalkable(x,y)){
                     continue;
                 }
 
-                const image = assets[mapToProcess].clone();
-
                 let overlayx = x;
                 let overlayy = y;
 
-                let cropx = x - (sliceSize-1)/2;
-                let cropy = y - (sliceSize-1)/2;
+                let cropx = x - (SLICE_SIZE-1)/2;
+                let cropy = y - (SLICE_SIZE-1)/2;
 
-                let cropw = x + (sliceSize-1)/2;
-                let croph = y + (sliceSize-1)/2;
+                let cropw = x + (SLICE_SIZE-1)/2;
+                let croph = y + (SLICE_SIZE-1)/2;
 
                 while(cropx<1){
                     cropx++;
@@ -122,21 +113,39 @@ function processMap(mapToProcess:string){
                 const compositeX = (x-cropx-1)*tilewidth;
                 const compositeY = (y-cropy-1)*tileheight;
 
-                image.crop(
-                    (cropx-1)*tilewidth,
-                    (cropy-1)*tileheight,
-                    tilewidth*sliceSize,
-                    tileheight*sliceSize
-            )
-                .composite(assets['hud_party'],compositeX,compositeY);
+                let image = sharpImage.clone();
+
+                const overlayOptions = {
+                    top: compositeY,
+                    left: compositeX,
+                };                
+
+                image = await image.extract({
+                    left: (cropx-1)*tilewidth,
+                    top: (cropy-1)*tileheight,
+                    width: tilewidth*SLICE_SIZE,
+                    height: tileheight*SLICE_SIZE
+                })
+                .raw().toBuffer();
+
+                const rawOptions = {
+                    raw: {
+                        width: tilewidth*SLICE_SIZE,
+                        height: tileheight*SLICE_SIZE,
+                        channels: 4,
+                    }
+                };
+
+                image = await Sharp(image,rawOptions)
+                .overlayWith(assets['hud_party'],overlayOptions).raw().toBuffer();
 
                 //append directions party can walk from here
-                if(isWalkable(x,y-1)) image.composite(assets['hud_up'],compositeX,compositeY);
-                if(isWalkable(x-1,y)) image.composite(assets['hud_left'],compositeX,compositeY);
-                if(isWalkable(x,y+1)) image.composite(assets['hud_down'],compositeX,compositeY);
-                if(isWalkable(x+1,y)) image.composite(assets['hud_right'],compositeX,compositeY);
+                if(isWalkable(x,y-1)) image = await Sharp(image,rawOptions).overlayWith(assets['hud_up'],overlayOptions).raw().toBuffer();
+                if(isWalkable(x-1,y)) image = await Sharp(image,rawOptions).overlayWith(assets['hud_left'],overlayOptions).raw().toBuffer();
+                if(isWalkable(x,y+1)) image = await Sharp(image,rawOptions).overlayWith(assets['hud_down'],overlayOptions).raw().toBuffer();
+                if(isWalkable(x+1,y)) image = await Sharp(image,rawOptions).overlayWith(assets['hud_right'],overlayOptions).raw().toBuffer();
 
-                image.write(subdir2+x+'-'+y+'.png');
+                Sharp(image,rawOptions).toFile(subdir2+x+'-'+y+'.png');
             }
         }
     }    
