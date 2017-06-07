@@ -4,7 +4,7 @@
   <image source="../../tilesets/discordantTriggers.png" width="960" height="960"/>
  </tileset>
  <tileset firstgid="901" name="dungeon_tileset_32" tilewidth="32" tileheight="32" tilecount="88" columns="8">
-  <image source="../../tilesets/dungeonTileset/dungeon_tileset_32.png" trans="000000" width="256" height="352"/>
+  <image source="../../tilesets/dungeon_tileset_32.png" trans="000000" width="256" height="352"/>
  </tileset>
  <tileset firstgid="989" name="objects_tilset_32" tilewidth="32" tileheight="32" tilecount="130" columns="10">
   <image source="../../tilesets/objects_tilset_32.png" trans="000000" width="320" height="416"/>
@@ -12,8 +12,8 @@
  <tileset firstgid="1119" name="floor_shadow_tileset_32" tilewidth="32" tileheight="32" tilecount="28" columns="4">
   <image source="../../tilesets/floor_shadow_tileset_32.png" trans="000000" width="128" height="224"/>
  </tileset>
- <tileset firstgid="1147" name="dungeon_tileset_32" tilewidth="32" tileheight="32" tilecount="29" columns="8">
-  <image source="../../tilesets/dungeonTileset/dungeon_tileset_32.png" trans="000000" width="256" height="352"/>
+ <tileset firstgid="1147" name="dungeon_tileset_32" tilewidth="32" tileheight="32" tilecount="88" columns="8">
+  <image source="../../tilesets/dungeon_tileset_32.png" trans="000000" width="256" height="352"/>
  </tileset>
  <layer name="BG COLOR" width="29" height="36">
   <data encoding="csv">
@@ -175,7 +175,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="Skull Shadows" width="29" height="36">
+ <layer name="skull shadows" width="29" height="36">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -215,7 +215,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="Path" width="29" height="36" opacity="0.22">
+ <layer name="path" width="29" height="36" opacity="0.22">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -255,7 +255,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="Events" width="29" height="36" opacity="0.42">
+ <layer name="events" width="29" height="36" opacity="0.42">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
