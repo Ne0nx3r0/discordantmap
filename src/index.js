@@ -20,19 +20,19 @@ function processMap(mapToProcess) {
     const mapWidth = mapInfo.width;
     const tileheight = mapInfo.tileheight;
     const tilewidth = mapInfo.tilewidth;
-    let triggersLayer;
+    let pathLayer;
     for (var i = 0; i < mapInfo.layers.length; i++) {
         const layer = mapInfo.layers[i];
-        if (layer.name == 'walls') {
-            triggersLayer = i;
+        if (layer.name == 'path') {
+            pathLayer = i;
             break;
         }
     }
-    if (triggersLayer === undefined) {
-        throw 'No walls layer defined in map ' + mapToProcess;
+    if (pathLayer === undefined) {
+        throw 'No path layer defined in map ' + mapToProcess;
     }
     function isWalkable(x, y) {
-        return mapInfo.layers[triggersLayer].data[(y - 1) * mapWidth + x - 1] != 1;
+        return mapInfo.layers[pathLayer].data[(y - 1) * mapWidth + x - 1] == 1;
     }
     const assetsToLoad = [
         './assets/hud_up.png',
