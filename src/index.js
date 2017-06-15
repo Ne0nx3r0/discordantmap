@@ -102,12 +102,6 @@ function processMap(mapToProcess) {
                         top: compositeY,
                         left: compositeX,
                     };
-                    console.log({
-                        left: (cropx - 1) * tilewidth,
-                        top: (cropy - 1) * tileheight,
-                        width: tilewidth * SLICE_SIZE,
-                        height: tileheight * SLICE_SIZE
-                    });
                     image = yield image.extract({
                         left: (cropx - 1) * tilewidth,
                         top: (cropy - 1) * tileheight,

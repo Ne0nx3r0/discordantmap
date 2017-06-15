@@ -119,12 +119,7 @@ function processMap(mapToProcess:string){
                     top: compositeY,
                     left: compositeX,
                 };                
-console.log({
-                    left: (cropx-1)*tilewidth,
-                    top: (cropy-1)*tileheight,
-                    width: tilewidth*SLICE_SIZE,
-                    height: tileheight*SLICE_SIZE
-                });
+                
                 image = await image.extract({
                     left: (cropx-1)*tilewidth,
                     top: (cropy-1)*tileheight,
