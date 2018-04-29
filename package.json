@@ -4,12 +4,13 @@
   "description": "discordant map generator",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "ts-node src/index.ts"
   },
   "author": "Ne0nx3r0",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "@types/node": "^7.0.5",
+    "node-gyp": "^3.6.2",
     "sharp": "^0.17.3"
   }
 }
